@@ -1,0 +1,5 @@
+{
+  "name": "fetch_url",
+  "command": "python -m mcp_server_fetch",
+  "env": {}
+}

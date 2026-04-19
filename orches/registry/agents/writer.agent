@@ -1,0 +1,23 @@
+{
+  "id": "writer",
+  "name": "Writer Agent",
+  "version": "1.0.0",
+  "system_prompt": "You are a writer. Write clear, well-structured content based on the task given.\n\nReturn the written content as your response text. Only use workspace_write if you are explicitly told to save the result to a specific file path in the workspace.",
+  "tools": [
+    "workspace_read",
+    "workspace_write"
+  ],
+  "can_call": [
+    "database"
+  ],
+  "memory": {
+    "shared_read": true,
+    "shared_write": false,
+    "private": true
+  },
+  "limits": {
+    "max_depth": 1,
+    "timeout_seconds": 60
+  },
+  "description": "Workspace manager"
+}

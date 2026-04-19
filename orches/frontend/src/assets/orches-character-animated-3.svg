@@ -1,0 +1,348 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 400 400">
+  <style><![CDATA[
+    /* Сценарий "работа завершена" — разовый проигрыш:
+       0-20%    — замах палочки вверх
+       20-50%   — поклон: корпус и голова наклоняются, шляпа приподнимается,
+                   рука опускается вниз/в сторону
+       50-100%  — плавный возврат в исходное положение
+       После окончания всё остаётся в исходной позе.
+       Задержка 0.5s позволяет увидеть "статичный старт". */
+
+    .baton-arm {
+      transform-origin: 24px 122px;
+      transform-box: view-box;
+      animation: finalSwing 2.5s ease-in-out 0.5s 1 both;
+    }
+
+    @keyframes finalSwing {
+      0%    { transform: rotate(0deg); }
+      20%   { transform: rotate(-28deg); }
+      50%   { transform: rotate(25deg); }
+      100%  { transform: rotate(0deg); }
+    }
+
+    /* Корпус (всё кроме ног) — кланяется вперёд и возвращается */
+    .torso {
+      transform-origin: 110px 176px;
+      transform-box: view-box;
+      animation: bow 2.5s ease-in-out 0.5s 1 both;
+    }
+
+    @keyframes bow {
+      0%, 20%  { transform: rotate(0deg) translateY(0); }
+      50%      { transform: rotate(6deg) translateY(2px); }
+      100%     { transform: rotate(0deg) translateY(0); }
+    }
+
+    /* Голова добавляет свой наклон вперёд */
+    .head {
+      transform-box: view-box;
+      transform-origin: 110px 96px;
+      animation: headBow 2.5s ease-in-out 0.5s 1 both;
+    }
+
+    @keyframes headBow {
+      0%, 20%  { transform: rotate(0deg); }
+      50%      { transform: rotate(8deg); }
+      100%     { transform: rotate(0deg); }
+    }
+
+    /* Шляпа приподнимается во время поклона */
+    .hat {
+      transform-box: view-box;
+      animation: hatTip 2.5s ease-in-out 0.5s 1 both;
+    }
+
+    @keyframes hatTip {
+      0%, 20%  { transform: translateY(0); }
+      50%      { transform: translateY(-10px); }
+      100%     { transform: translateY(0); }
+    }
+  ]]></style>
+
+  <!-- Увеличенный и отцентрированный дирижёр -->
+  <g transform="translate(78, 62) scale(1.38)">
+
+    <!-- ===== TORSO GROUP (всё кроме ног — кланяется) ===== -->
+    <g class="torso">
+
+    <!-- ===== HEAD GROUP (шляпа + голова) ===== -->
+    <g class="head">
+
+      <!-- ===== HAT (вложенная группа — приподнимается при поклоне) ===== -->
+      <g class="hat">
+
+      <!-- HAT: Brim -->
+      <rect x="16" y="48" width="8" height="8" fill="#000000"/>
+      <rect x="24" y="48" width="8" height="8" fill="#000000"/>
+      <rect x="32" y="48" width="8" height="8" fill="#000000"/>
+      <rect x="40" y="48" width="8" height="8" fill="#000000"/>
+      <rect x="48" y="48" width="8" height="8" fill="#000000"/>
+      <rect x="56" y="48" width="8" height="8" fill="#000000"/>
+      <rect x="64" y="48" width="8" height="8" fill="#000000"/>
+      <rect x="72" y="48" width="8" height="8" fill="#000000"/>
+      <rect x="80" y="48" width="8" height="8" fill="#000000"/>
+      <rect x="88" y="48" width="8" height="8" fill="#000000"/>
+      <rect x="96" y="48" width="8" height="8" fill="#000000"/>
+      <rect x="104" y="48" width="8" height="8" fill="#000000"/>
+      <rect x="112" y="48" width="8" height="8" fill="#000000"/>
+      <rect x="120" y="48" width="8" height="8" fill="#000000"/>
+      <rect x="128" y="48" width="8" height="8" fill="#000000"/>
+      <rect x="136" y="48" width="8" height="8" fill="#000000"/>
+      <rect x="144" y="48" width="8" height="8" fill="#000000"/>
+      <rect x="152" y="48" width="8" height="8" fill="#000000"/>
+
+      <!-- Hat body -->
+      <rect x="48" y="8" width="8" height="8" fill="#000000"/>
+      <rect x="56" y="8" width="8" height="8" fill="#000000"/>
+      <rect x="64" y="8" width="8" height="8" fill="#000000"/>
+      <rect x="72" y="8" width="8" height="8" fill="#000000"/>
+      <rect x="80" y="8" width="8" height="8" fill="#000000"/>
+      <rect x="88" y="8" width="8" height="8" fill="#000000"/>
+      <rect x="96" y="8" width="8" height="8" fill="#000000"/>
+      <rect x="104" y="8" width="8" height="8" fill="#000000"/>
+      <rect x="112" y="8" width="8" height="8" fill="#000000"/>
+      <rect x="120" y="8" width="8" height="8" fill="#000000"/>
+
+      <rect x="48" y="16" width="8" height="8" fill="#000000"/>
+      <rect x="120" y="16" width="8" height="8" fill="#000000"/>
+      <rect x="48" y="24" width="8" height="8" fill="#000000"/>
+      <rect x="120" y="24" width="8" height="8" fill="#000000"/>
+      <rect x="48" y="32" width="8" height="8" fill="#000000"/>
+      <rect x="120" y="32" width="8" height="8" fill="#000000"/>
+      <rect x="48" y="40" width="8" height="8" fill="#000000"/>
+      <rect x="56" y="40" width="8" height="8" fill="#000000"/>
+      <rect x="64" y="40" width="8" height="8" fill="#000000"/>
+      <rect x="72" y="40" width="8" height="8" fill="#000000"/>
+      <rect x="80" y="40" width="8" height="8" fill="#000000"/>
+      <rect x="88" y="40" width="8" height="8" fill="#000000"/>
+      <rect x="96" y="40" width="8" height="8" fill="#000000"/>
+      <rect x="104" y="40" width="8" height="8" fill="#000000"/>
+      <rect x="112" y="40" width="8" height="8" fill="#000000"/>
+      <rect x="120" y="40" width="8" height="8" fill="#000000"/>
+
+      </g>
+      <!-- ===== /HAT ===== -->
+
+      <!-- HEAD -->
+      <rect x="48" y="56" width="8" height="8" fill="#000000"/>
+      <rect x="56" y="56" width="8" height="8" fill="#000000"/>
+      <rect x="64" y="56" width="8" height="8" fill="#000000"/>
+      <rect x="72" y="56" width="8" height="8" fill="#000000"/>
+      <rect x="80" y="56" width="8" height="8" fill="#000000"/>
+      <rect x="88" y="56" width="8" height="8" fill="#000000"/>
+      <rect x="96" y="56" width="8" height="8" fill="#000000"/>
+      <rect x="104" y="56" width="8" height="8" fill="#000000"/>
+      <rect x="112" y="56" width="8" height="8" fill="#000000"/>
+      <rect x="120" y="56" width="8" height="8" fill="#000000"/>
+
+      <rect x="40" y="64" width="8" height="8" fill="#000000"/>
+      <rect x="48" y="64" width="8" height="8" fill="#000000"/>
+      <rect x="128" y="64" width="8" height="8" fill="#000000"/>
+      <rect x="136" y="64" width="8" height="8" fill="#000000"/>
+
+      <!-- eyes -->
+      <rect x="56" y="64" width="8" height="8" fill="#000000"/>
+      <rect x="64" y="64" width="8" height="8" fill="#ffffff"/>
+      <rect x="72" y="64" width="8" height="8" fill="#000000"/>
+      <rect x="80" y="64" width="8" height="8" fill="#000000"/>
+      <rect x="88" y="64" width="8" height="8" fill="#000000"/>
+      <rect x="96" y="64" width="8" height="8" fill="#000000"/>
+      <rect x="104" y="64" width="8" height="8" fill="#ffffff"/>
+      <rect x="112" y="64" width="8" height="8" fill="#000000"/>
+      <rect x="120" y="64" width="8" height="8" fill="#000000"/>
+
+      <rect x="40" y="72" width="8" height="8" fill="#000000"/>
+      <rect x="48" y="72" width="8" height="8" fill="#000000"/>
+      <rect x="56" y="72" width="8" height="8" fill="#000000"/>
+      <rect x="64" y="72" width="8" height="8" fill="#000000"/>
+      <rect x="72" y="72" width="8" height="8" fill="#000000"/>
+      <rect x="80" y="72" width="8" height="8" fill="#000000"/>
+      <rect x="88" y="72" width="8" height="8" fill="#000000"/>
+      <rect x="96" y="72" width="8" height="8" fill="#000000"/>
+      <rect x="104" y="72" width="8" height="8" fill="#000000"/>
+      <rect x="112" y="72" width="8" height="8" fill="#000000"/>
+      <rect x="120" y="72" width="8" height="8" fill="#000000"/>
+      <rect x="128" y="72" width="8" height="8" fill="#000000"/>
+      <rect x="136" y="72" width="8" height="8" fill="#000000"/>
+
+      <!-- smile -->
+      <rect x="40" y="80" width="8" height="8" fill="#000000"/>
+      <rect x="48" y="80" width="8" height="8" fill="#000000"/>
+      <rect x="56" y="80" width="8" height="8" fill="#ffffff"/>
+      <rect x="64" y="80" width="8" height="8" fill="#000000"/>
+      <rect x="72" y="80" width="8" height="8" fill="#000000"/>
+      <rect x="80" y="80" width="8" height="8" fill="#000000"/>
+      <rect x="88" y="80" width="8" height="8" fill="#000000"/>
+      <rect x="96" y="80" width="8" height="8" fill="#000000"/>
+      <rect x="104" y="80" width="8" height="8" fill="#000000"/>
+      <rect x="112" y="80" width="8" height="8" fill="#ffffff"/>
+      <rect x="120" y="80" width="8" height="8" fill="#000000"/>
+      <rect x="128" y="80" width="8" height="8" fill="#000000"/>
+      <rect x="136" y="80" width="8" height="8" fill="#000000"/>
+
+      <rect x="48" y="88" width="8" height="8" fill="#000000"/>
+      <rect x="56" y="88" width="8" height="8" fill="#000000"/>
+      <rect x="64" y="88" width="8" height="8" fill="#000000"/>
+      <rect x="72" y="88" width="8" height="8" fill="#000000"/>
+      <rect x="80" y="88" width="8" height="8" fill="#000000"/>
+      <rect x="88" y="88" width="8" height="8" fill="#000000"/>
+      <rect x="96" y="88" width="8" height="8" fill="#000000"/>
+      <rect x="104" y="88" width="8" height="8" fill="#000000"/>
+      <rect x="112" y="88" width="8" height="8" fill="#000000"/>
+      <rect x="120" y="88" width="8" height="8" fill="#000000"/>
+      <rect x="128" y="88" width="8" height="8" fill="#000000"/>
+
+    </g>
+
+    <!-- ===== NECK ===== -->
+    <rect x="72" y="96" width="8" height="8" fill="#000000"/>
+    <rect x="80" y="96" width="8" height="8" fill="#000000"/>
+    <rect x="88" y="96" width="8" height="8" fill="#000000"/>
+    <rect x="96" y="96" width="8" height="8" fill="#000000"/>
+    <rect x="104" y="96" width="8" height="8" fill="#000000"/>
+
+    <!-- ===== BODY / SUIT (статичное) ===== -->
+    <!-- Shoulders -->
+    <rect x="32" y="104" width="8" height="8" fill="#000000"/>
+    <rect x="40" y="104" width="8" height="8" fill="#000000"/>
+    <rect x="48" y="104" width="8" height="8" fill="#000000"/>
+    <rect x="56" y="104" width="8" height="8" fill="#000000"/>
+    <rect x="64" y="104" width="8" height="8" fill="#000000"/>
+    <rect x="72" y="104" width="8" height="8" fill="#000000"/>
+    <rect x="80" y="104" width="8" height="8" fill="#000000"/>
+    <rect x="88" y="104" width="8" height="8" fill="#000000"/>
+    <rect x="96" y="104" width="8" height="8" fill="#000000"/>
+    <rect x="104" y="104" width="8" height="8" fill="#000000"/>
+    <rect x="112" y="104" width="8" height="8" fill="#000000"/>
+    <rect x="120" y="104" width="8" height="8" fill="#000000"/>
+    <rect x="128" y="104" width="8" height="8" fill="#000000"/>
+    <rect x="136" y="104" width="8" height="8" fill="#000000"/>
+
+    <!-- Body (без левой руки, которую вынесли в анимируемую группу) -->
+    <rect x="24" y="112" width="8" height="8" fill="#000000"/>
+    <rect x="32" y="112" width="8" height="8" fill="#000000"/>
+    <rect x="40" y="112" width="8" height="8" fill="#000000"/>
+    <rect x="48" y="112" width="8" height="8" fill="#000000"/>
+    <rect x="56" y="112" width="8" height="8" fill="#000000"/>
+    <rect x="64" y="112" width="8" height="8" fill="#000000"/>
+    <rect x="72" y="112" width="8" height="8" fill="#000000"/>
+    <rect x="80" y="112" width="8" height="8" fill="#000000"/>
+    <rect x="88" y="112" width="8" height="8" fill="#000000"/>
+    <rect x="96" y="112" width="8" height="8" fill="#000000"/>
+    <rect x="104" y="112" width="8" height="8" fill="#000000"/>
+    <rect x="112" y="112" width="8" height="8" fill="#000000"/>
+    <rect x="120" y="112" width="8" height="8" fill="#000000"/>
+    <rect x="128" y="112" width="8" height="8" fill="#000000"/>
+    <rect x="136" y="112" width="8" height="8" fill="#000000"/>
+    <rect x="144" y="112" width="8" height="8" fill="#000000"/>
+
+    <!-- Torso row (правая сторона с рукой) -->
+    <rect x="16" y="120" width="8" height="8" fill="#000000"/>
+    <rect x="24" y="120" width="8" height="8" fill="#000000"/>
+    <rect x="32" y="120" width="8" height="8" fill="#000000"/>
+    <rect x="40" y="120" width="8" height="8" fill="#000000"/>
+    <rect x="48" y="120" width="8" height="8" fill="#000000"/>
+    <rect x="56" y="120" width="8" height="8" fill="#000000"/>
+    <rect x="64" y="120" width="8" height="8" fill="#000000"/>
+    <rect x="72" y="120" width="8" height="8" fill="#000000"/>
+    <rect x="80" y="120" width="8" height="8" fill="#000000"/>
+    <rect x="88" y="120" width="8" height="8" fill="#000000"/>
+    <rect x="96" y="120" width="8" height="8" fill="#000000"/>
+    <rect x="104" y="120" width="8" height="8" fill="#000000"/>
+    <rect x="112" y="120" width="8" height="8" fill="#000000"/>
+    <rect x="120" y="120" width="8" height="8" fill="#000000"/>
+    <rect x="128" y="120" width="8" height="8" fill="#000000"/>
+    <rect x="136" y="120" width="8" height="8" fill="#000000"/>
+    <rect x="144" y="120" width="8" height="8" fill="#000000"/>
+    <rect x="152" y="120" width="8" height="8" fill="#000000"/>
+
+    <!-- Torso continuation (без левой руки) -->
+    <rect x="56" y="128" width="8" height="8" fill="#000000"/>
+    <rect x="64" y="128" width="8" height="8" fill="#000000"/>
+    <rect x="72" y="128" width="8" height="8" fill="#000000"/>
+    <rect x="80" y="128" width="8" height="8" fill="#000000"/>
+    <rect x="88" y="128" width="8" height="8" fill="#000000"/>
+    <rect x="96" y="128" width="8" height="8" fill="#000000"/>
+    <rect x="104" y="128" width="8" height="8" fill="#000000"/>
+    <rect x="112" y="128" width="8" height="8" fill="#000000"/>
+    <rect x="120" y="128" width="8" height="8" fill="#000000"/>
+    <rect x="128" y="128" width="8" height="8" fill="#000000"/>
+
+    <!-- Правая рука (статичная) -->
+    <rect x="152" y="128" width="8" height="8" fill="#000000"/>
+    <rect x="160" y="128" width="8" height="8" fill="#000000"/>
+
+    <!-- Lower torso -->
+    <rect x="56" y="136" width="8" height="8" fill="#000000"/>
+    <rect x="64" y="136" width="8" height="8" fill="#000000"/>
+    <rect x="72" y="136" width="8" height="8" fill="#000000"/>
+    <rect x="80" y="136" width="8" height="8" fill="#000000"/>
+    <rect x="88" y="136" width="8" height="8" fill="#000000"/>
+    <rect x="96" y="136" width="8" height="8" fill="#000000"/>
+    <rect x="104" y="136" width="8" height="8" fill="#000000"/>
+    <rect x="112" y="136" width="8" height="8" fill="#000000"/>
+    <rect x="120" y="136" width="8" height="8" fill="#000000"/>
+    <rect x="128" y="136" width="8" height="8" fill="#000000"/>
+
+    <rect x="56" y="144" width="8" height="8" fill="#000000"/>
+    <rect x="64" y="144" width="8" height="8" fill="#000000"/>
+    <rect x="72" y="144" width="8" height="8" fill="#000000"/>
+    <rect x="80" y="144" width="8" height="8" fill="#000000"/>
+    <rect x="88" y="144" width="8" height="8" fill="#000000"/>
+    <rect x="96" y="144" width="8" height="8" fill="#000000"/>
+    <rect x="104" y="144" width="8" height="8" fill="#000000"/>
+    <rect x="112" y="144" width="8" height="8" fill="#000000"/>
+    <rect x="120" y="144" width="8" height="8" fill="#000000"/>
+    <rect x="128" y="144" width="8" height="8" fill="#000000"/>
+
+    <!-- ===== АНИМИРУЕМАЯ ЛЕВАЯ РУКА С ПАЛОЧКОЙ ===== -->
+    <g class="baton-arm">
+      <rect x="8" y="122" width="8" height="8" fill="#000000"/>
+      <rect x="16" y="122" width="8" height="8" fill="#000000"/>
+      <rect x="-8" y="104" width="8" height="8" fill="#000000"/>
+      <rect x="0"  y="112" width="8" height="8" fill="#000000"/>
+      <rect x="8"  y="120" width="8" height="8" fill="#000000"/>
+      <rect x="16" y="128" width="8" height="8" fill="#000000"/>
+    </g>
+
+    </g>
+    <!-- ===== /TORSO GROUP ===== -->
+
+    <!-- ===== LEGS ===== -->
+    <rect x="64" y="152" width="8" height="8" fill="#000000"/>
+    <rect x="72" y="152" width="8" height="8" fill="#000000"/>
+    <rect x="80" y="152" width="8" height="8" fill="#000000"/>
+    <rect x="104" y="152" width="8" height="8" fill="#000000"/>
+    <rect x="112" y="152" width="8" height="8" fill="#000000"/>
+    <rect x="120" y="152" width="8" height="8" fill="#000000"/>
+
+    <rect x="64" y="160" width="8" height="8" fill="#000000"/>
+    <rect x="72" y="160" width="8" height="8" fill="#000000"/>
+    <rect x="80" y="160" width="8" height="8" fill="#000000"/>
+    <rect x="104" y="160" width="8" height="8" fill="#000000"/>
+    <rect x="112" y="160" width="8" height="8" fill="#000000"/>
+    <rect x="120" y="160" width="8" height="8" fill="#000000"/>
+
+    <rect x="64" y="168" width="8" height="8" fill="#000000"/>
+    <rect x="72" y="168" width="8" height="8" fill="#000000"/>
+    <rect x="80" y="168" width="8" height="8" fill="#000000"/>
+    <rect x="104" y="168" width="8" height="8" fill="#000000"/>
+    <rect x="112" y="168" width="8" height="8" fill="#000000"/>
+    <rect x="120" y="168" width="8" height="8" fill="#000000"/>
+
+    <!-- ===== SHOES ===== -->
+    <rect x="56" y="176" width="8" height="8" fill="#000000"/>
+    <rect x="64" y="176" width="8" height="8" fill="#000000"/>
+    <rect x="72" y="176" width="8" height="8" fill="#000000"/>
+    <rect x="80" y="176" width="8" height="8" fill="#000000"/>
+    <rect x="88" y="176" width="8" height="8" fill="#000000"/>
+    <rect x="104" y="176" width="8" height="8" fill="#000000"/>
+    <rect x="112" y="176" width="8" height="8" fill="#000000"/>
+    <rect x="120" y="176" width="8" height="8" fill="#000000"/>
+    <rect x="128" y="176" width="8" height="8" fill="#000000"/>
+    <rect x="136" y="176" width="8" height="8" fill="#000000"/>
+
+  </g>
+
+</svg>

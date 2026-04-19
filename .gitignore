@@ -1,0 +1,56 @@
+# Environment
+orches/.env
+orches/.env.*
+!orches/.env.example
+
+# Virtual environment
+orches/.venv/
+.venv/
+venv/
+env/
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.egg
+*.egg-info/
+build/
+.eggs/
+
+# User data — never overwritten by git pull
+orches/data/*.db
+orches/data/*.db-shm
+orches/data/*.db-wal
+orches/data/*.json
+
+# Alembic — removed, using _migrate_sqlite() instead
+orches/alembic/
+orches/alembic.ini
+orches/workspace/*
+!orches/workspace/.gitkeep
+orches/registry/agents/*.agent
+!orches/registry/agents/main.agent
+
+# Node
+node_modules/
+orches/frontend/dist/
+
+# Logs
+*.log
+logs/
+
+# IDE / OS
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# Claude Code session data
+.claude/
+
+# Internal dev
+PLAN.md

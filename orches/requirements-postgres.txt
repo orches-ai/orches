@@ -1,0 +1,6 @@
+# Optional: PostgreSQL + vector search support
+# pip install -r requirements.txt -r requirements-postgres.txt
+-r requirements.txt
+psycopg2-binary>=2.9
+pgvector>=0.2
+alembic>=1.13
