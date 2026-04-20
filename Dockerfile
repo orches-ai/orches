@@ -10,6 +10,14 @@ RUN npm run build
 FROM python:3.11-slim
 WORKDIR /app
 
+# Install Node.js (for npx-based MCP servers) and uv (for uvx-based MCP servers)
+RUN apt-get update && apt-get install -y --no-install-recommends curl ca-certificates \
+    && curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
+    && apt-get install -y --no-install-recommends nodejs \
+    && npm install -g npm@latest \
+    && pip install --no-cache-dir uv \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
+
 # Install Python deps
 COPY orches/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
