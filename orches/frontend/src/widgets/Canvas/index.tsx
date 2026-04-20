@@ -527,7 +527,7 @@ function FilesPage({ initialPath, onOpenPage, onPathChange }: { initialPath?: st
                 onMouseLeave={e => (e.currentTarget.style.background = '#fafafa')}
               >
                 <span style={{ fontSize: 28 }}>{fileIcon(item)}</span>
-                <span style={{ fontSize: 12, color: '#171717', fontWeight: 500, textAlign: 'center', wordBreak: 'break-all', lineHeight: 1.3 }}>{item.name}</span>
+                <span style={{ fontSize: 12, color: '#171717', fontWeight: 500, textAlign: 'center', wordBreak: 'break-all', lineHeight: 1.3 }}>{item.type === 'dir' ? item.name.replace(/\.[a-z0-9]+$/i, '') : item.name}</span>
                 {item.size !== null && <span style={{ fontSize: 10, color: '#a3a3a3' }}>{formatSize(item.size)}</span>}
                 <button onClick={e => requestDelete(item, e)}
                   style={{ position: 'absolute', top: 4, right: 6, background: 'none', border: 'none', cursor: 'pointer', color: '#d4d4d4', fontSize: 14, lineHeight: 1, padding: 2 }}
@@ -1567,13 +1567,13 @@ export default function Canvas({ pages, activeId, minimized, onMinimize, onResto
 
       {/* Body */}
       <div style={{ flex: 1, overflow: (activePage.type === 'settings' || activePage.type === 'files') ? 'hidden' : 'auto' }}>
-        {activePage.type === 'markdown' && <MarkdownPage content={activePage.content ?? ''} title={activePage.title} filePath={activePage.filePath} />}
-        {activePage.type === 'code'     && <CodePage content={activePage.content ?? ''} language={activePage.language} title={activePage.title} filePath={activePage.filePath} />}
-        {activePage.type === 'browser'  && <BrowserPage initialUrl={activePage.url ?? ''} />}
-        {activePage.type === 'table'    && <TablePage data={activePage.data ?? '[]'} title={activePage.title} />}
-        {activePage.type === 'chart'    && <ChartPage data={activePage.data ?? '[]'} chart_type={activePage.chart_type} title={activePage.title} />}
-        {activePage.type === 'image'    && <ImagePage filePath={activePage.filePath ?? activePage.url ?? ''} title={activePage.title} />}
-        {activePage.type === 'files'    && <FilesPage initialPath={filePaths[activePage.id] ?? activePage.filePath ?? ''} onOpenPage={onOpenPage} onPathChange={p => handleFilesPathChange(activePage.id, p)} />}
+        {activePage.type === 'markdown' && <MarkdownPage key={activePage.id} content={activePage.content ?? ''} title={activePage.title} filePath={activePage.filePath} />}
+        {activePage.type === 'code'     && <CodePage key={activePage.id} content={activePage.content ?? ''} language={activePage.language} title={activePage.title} filePath={activePage.filePath} />}
+        {activePage.type === 'browser'  && <BrowserPage key={activePage.id} initialUrl={activePage.url ?? ''} />}
+        {activePage.type === 'table'    && <TablePage key={activePage.id} data={activePage.data ?? '[]'} title={activePage.title} />}
+        {activePage.type === 'chart'    && <ChartPage key={activePage.id} data={activePage.data ?? '[]'} chart_type={activePage.chart_type} title={activePage.title} />}
+        {activePage.type === 'image'    && <ImagePage key={activePage.id} filePath={activePage.filePath ?? activePage.url ?? ''} title={activePage.title} />}
+        {activePage.type === 'files'    && <FilesPage key={activePage.id} initialPath={filePaths[activePage.id] ?? activePage.filePath ?? ''} onOpenPage={onOpenPage} onPathChange={p => handleFilesPathChange(activePage.id, p)} />}
         {activePage.type === 'settings' && <SettingsPage />}
       </div>
     </div>

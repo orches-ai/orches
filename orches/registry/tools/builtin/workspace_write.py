@@ -13,7 +13,7 @@ TOOL_META = {
             },
             "path": {
                 "type": "string",
-                "description": "Relative path in workspace",
+                "description": "Relative path in workspace. For mkdir, use a plain folder name without file extensions (e.g. 'reports/bitcoin' not 'reports/bitcoin.md').",
             },
             "content": {
                 "type": "string",
