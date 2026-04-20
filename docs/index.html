@@ -76,7 +76,7 @@
     }
     .hero-badge span { width: 6px; height: 6px; border-radius: 50%; background: #00a67e; display: inline-block; }
     h1 {
-      font-size: clamp(36px, 6vw, 58px);
+      font-size: clamp(32px, 6vw, 58px);
       font-weight: 700;
       letter-spacing: -2px;
       line-height: 1.1;
@@ -112,21 +112,20 @@
     /* ── Hero character ───────────────────────────────────────── */
     .hero-character {
       width: 200px; height: 200px;
-      margin: 0 auto 0px;
+      margin: 0 auto;
       display: block;
     }
 
     /* ── Screenshot ───────────────────────────────────────────── */
-    .screenshot-wrap {
-      max-width: 900px; margin: 64px auto 0;
-      border-radius: 16px;
-      overflow: hidden;
+    .screenshot-outer {
+      max-width: 900px; margin: 0 auto; padding: 0 24px;
+    }
+    .screenshot-inner {
+      border-radius: 16px; overflow: hidden;
       border: 1px solid var(--border);
       box-shadow: 0 8px 40px rgba(0,0,0,0.08);
     }
-    .screenshot-wrap img {
-      width: 100%; display: block;
-    }
+    .screenshot-inner img { width: 100%; display: block; }
 
     /* ── Code block ───────────────────────────────────────────── */
     .code-block {
@@ -141,15 +140,14 @@
       padding: 12px 16px;
       border-bottom: 1px solid #222;
     }
-    .code-bar span {
-      width: 11px; height: 11px; border-radius: 50%;
-    }
+    .code-bar span { width: 11px; height: 11px; border-radius: 50%; }
     .code-body {
       padding: 16px 20px;
       font-family: var(--mono);
       font-size: 13px;
       line-height: 1.7;
       color: #e5e5e5;
+      overflow-x: auto;
     }
     .code-body .dim  { color: #555; }
     .code-body .cmd  { color: #7dd3fc; }
@@ -166,7 +164,7 @@
       margin-bottom: 14px;
     }
     h2 {
-      font-size: clamp(26px, 4vw, 36px);
+      font-size: clamp(24px, 4vw, 36px);
       font-weight: 700;
       letter-spacing: -1px;
       margin-bottom: 14px;
@@ -181,7 +179,7 @@
     /* ── Features grid ────────────────────────────────────────── */
     .features {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
       gap: 16px;
     }
     .feature {
@@ -198,19 +196,11 @@
       font-size: 17px;
       margin-bottom: 14px;
     }
-    .feature h3 {
-      font-size: 14px; font-weight: 600;
-      margin-bottom: 6px;
-    }
-    .feature p {
-      font-size: 13px; color: var(--muted);
-      line-height: 1.55;
-    }
+    .feature h3 { font-size: 14px; font-weight: 600; margin-bottom: 6px; }
+    .feature p  { font-size: 13px; color: var(--muted); line-height: 1.55; }
 
     /* ── Providers ────────────────────────────────────────────── */
-    .providers {
-      display: flex; flex-wrap: wrap; gap: 10px;
-    }
+    .providers { display: flex; flex-wrap: wrap; gap: 10px; }
     .provider-chip {
       display: flex; align-items: center; gap: 8px;
       padding: 8px 14px;
@@ -219,12 +209,10 @@
       border-radius: 20px;
       font-size: 13px;
     }
-    .provider-dot {
-      width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
-    }
+    .provider-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
 
     /* ── Steps ────────────────────────────────────────────────── */
-    .steps { display: flex; flex-direction: column; gap: 0; }
+    .steps { display: flex; flex-direction: column; }
     .step {
       display: flex; gap: 20px; align-items: flex-start;
       padding: 28px 0;
@@ -244,6 +232,7 @@
       font-family: var(--mono); font-size: 12px;
       background: #f5f5f5; border-radius: 5px;
       padding: 1px 7px; color: var(--text);
+      word-break: break-all;
     }
 
     /* ── CTA ──────────────────────────────────────────────────── */
@@ -274,6 +263,47 @@
     }
     footer a { color: var(--muted); }
     footer a:hover { color: var(--text); }
+
+    /* ── Responsive ───────────────────────────────────────────── */
+    @media (max-width: 768px) {
+      nav { padding: 0 20px; }
+      .nav-links a:not(.nav-btn) { display: none; }
+
+      .hero { padding: 16px 20px 60px; }
+      .hero-character { width: 140px; height: 140px; }
+      .hero-sub { font-size: 16px; }
+      .hero-actions { flex-direction: column; align-items: center; }
+      .btn-primary, .btn-secondary { width: 100%; max-width: 280px; text-align: center; }
+
+      .code-block { margin: 40px auto 0; }
+      .code-body { font-size: 12px; }
+
+      .screenshot-outer { padding: 0 16px; }
+      .screenshot-inner { border-radius: 10px; }
+
+      section { padding: 56px 20px; }
+      .section-sub { font-size: 15px; margin-bottom: 36px; }
+
+      .features { grid-template-columns: 1fr; }
+
+      .step { gap: 14px; padding: 22px 0; }
+      .step p { font-size: 13px; }
+
+      .cta { padding: 64px 20px; }
+      .cta p { font-size: 15px; }
+
+      hr { margin: 0 20px; }
+    }
+
+    @media (max-width: 480px) {
+      nav { padding: 0 16px; }
+      .nav-logo { font-size: 15px; }
+      .nav-logo img { width: 48px; height: 48px; }
+
+      h1 { letter-spacing: -1px; }
+
+      .code-block { border-radius: 10px; }
+    }
   </style>
 </head>
 <body>
@@ -325,9 +355,9 @@
   </div>
 </div>
 
-<div style="max-width:900px; margin:0 auto; padding:0 24px;">
-  <div style="border-radius:16px; overflow:hidden; border:1px solid var(--border); box-shadow:0 8px 40px rgba(0,0,0,0.08);">
-    <img src="gallery/workspace.png" alt="Orches — multi-agent workspace" style="width:100%;display:block;" />
+<div class="screenshot-outer">
+  <div class="screenshot-inner">
+    <img src="gallery/workspace.png" alt="Orches — multi-agent workspace" />
   </div>
 </div>
 
