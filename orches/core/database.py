@@ -104,6 +104,17 @@ class AgentMemoryModel(Base):
                         onupdate=lambda: datetime.now(timezone.utc))
 
 
+class RagChunkModel(Base):
+    __tablename__ = "rag_chunks"
+    id         = Column(Integer, primary_key=True, autoincrement=True)
+    collection = Column(String, nullable=False, index=True, default="default")
+    source     = Column(String, nullable=False)   # filename or label
+    chunk_index= Column(Integer, nullable=False, default=0)
+    text       = Column(Text, nullable=False)
+    embedding  = Column(Text, nullable=True)       # JSON list[float]
+    created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
+
+
 class AgentRunModel(Base):
     __tablename__ = "agent_runs"
     id          = Column(String, primary_key=True)

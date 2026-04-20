@@ -16,7 +16,8 @@
     "researcher",
     "writer",
     "notion_agent",
-    "competitor_analyst"
+    "competitor_analyst",
+    "rag"
   ],
   "memory": {
     "shared_read": true,
