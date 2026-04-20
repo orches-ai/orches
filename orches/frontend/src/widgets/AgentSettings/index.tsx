@@ -174,7 +174,9 @@ export default function AgentSettings({ agent, agents, onClose, onSave, onDelete
 
   function buildSchedule(): string {
     if (schedMode === 'cron') return schedCron.trim()
-    return schedDate ? `${schedDate}T${schedTime}` : ''
+    if (!schedDate) return ''
+    // Convert local datetime to UTC ISO string so server stores correct time
+    return new Date(`${schedDate}T${schedTime}`).toISOString()
   }
   const [visible, setVisible] = useState(false)
 

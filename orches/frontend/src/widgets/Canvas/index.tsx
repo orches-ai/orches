@@ -60,29 +60,74 @@ function ActionBtn({ onClick, children }: { onClick: () => void; children: React
   )
 }
 
-function MarkdownPage({ content, title }: { content: string; title: string }) {
+function useFileEditor(initialContent: string, filePath?: string) {
+  const [editing, setEditing]   = useState(false)
+  const [draft, setDraft]       = useState('')
+  const [saving, setSaving]     = useState(false)
+  const [currentContent, setCurrentContent] = useState(initialContent)
+
+  function startEdit() { setDraft(currentContent); setEditing(true) }
+  function cancelEdit() { setEditing(false) }
+  async function saveEdit() {
+    if (!filePath) return
+    setSaving(true)
+    try {
+      const fd = new FormData()
+      fd.append('file', new Blob([draft], { type: 'text/plain' }), filePath.split('/').pop()!)
+      await fetch(`${API}/workspace/upload?path=${encodeURIComponent(filePath)}`, { method: 'POST', body: fd })
+      setCurrentContent(draft)
+    } finally { setSaving(false); setEditing(false) }
+  }
+  return { editing, draft, setDraft, saving, currentContent, startEdit, cancelEdit, saveEdit }
+}
+
+function MarkdownPage({ content, title, filePath }: { content: string; title: string; filePath?: string }) {
   const [copied, setCopied] = useState(false)
   const [saved, setSaved]   = useState(false)
-  function copy() { navigator.clipboard.writeText(content); setCopied(true); setTimeout(() => setCopied(false), 1500) }
+  const ed = useFileEditor(content, filePath)
+
+  function copy() { navigator.clipboard.writeText(ed.currentContent); setCopied(true); setTimeout(() => setCopied(false), 1500) }
   async function saveToWorkspace() {
     const filename = `${title.replace(/[^a-z0-9_\-\s]/gi, '').trim().replace(/\s+/g, '_') || 'report'}.md`
     const fd = new FormData()
-    fd.append('file', new Blob([content], { type: 'text/markdown' }), filename)
+    fd.append('file', new Blob([ed.currentContent], { type: 'text/markdown' }), filename)
     await fetch(`${API}/workspace/upload?path=${encodeURIComponent(filename)}`, { method: 'POST', body: fd })
     setSaved(true); setTimeout(() => setSaved(false), 2000)
   }
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
       <ActionBar>
-        <ActionBtn onClick={copy}>{copied ? 'Copied!' : 'Copy'}</ActionBtn>
-        <ActionBtn onClick={() => download(`${title}.md`, content)}>Download .md</ActionBtn>
-        <ActionBtn onClick={saveToWorkspace}>{saved ? 'Saved!' : 'Save to workspace'}</ActionBtn>
+        {ed.editing ? (
+          <>
+            <ActionBtn onClick={ed.cancelEdit}>Cancel</ActionBtn>
+            <button onClick={ed.saveEdit} disabled={ed.saving} style={{ fontSize: 12, padding: '4px 12px', background: '#171717', color: '#fff', border: 'none', borderRadius: 6, cursor: 'pointer', fontFamily: 'inherit' }}>
+              {ed.saving ? 'Saving…' : 'Update'}
+            </button>
+          </>
+        ) : (
+          <>
+            <ActionBtn onClick={copy}>{copied ? 'Copied!' : 'Copy'}</ActionBtn>
+            <ActionBtn onClick={() => download(`${title}.md`, ed.currentContent)}>Download .md</ActionBtn>
+            {filePath
+              ? <ActionBtn onClick={ed.startEdit}>Edit</ActionBtn>
+              : <ActionBtn onClick={saveToWorkspace}>{saved ? 'Saved!' : 'Save to workspace'}</ActionBtn>
+            }
+          </>
+        )}
       </ActionBar>
-      <div style={{ flex: 1, overflowY: 'auto', padding: '28px 40px' }}>
-        <div className="md" style={{ fontSize: 14, maxWidth: 820, margin: '0 auto' }}>
-          <ReactMarkdown remarkPlugins={[remarkGfm]}>{content}</ReactMarkdown>
+      {ed.editing ? (
+        <textarea
+          value={ed.draft}
+          onChange={e => ed.setDraft(e.target.value)}
+          style={{ flex: 1, padding: '24px 32px', fontFamily: 'var(--mono)', fontSize: 13, lineHeight: 1.7, border: 'none', outline: 'none', resize: 'none', background: '#fafafa', color: '#171717' }}
+        />
+      ) : (
+        <div style={{ flex: 1, overflowY: 'auto', padding: '28px 40px' }}>
+          <div className="md" style={{ fontSize: 14, maxWidth: 820, margin: '0 auto' }}>
+            <ReactMarkdown remarkPlugins={[remarkGfm]}>{ed.currentContent}</ReactMarkdown>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   )
 }
@@ -172,31 +217,54 @@ const LANG_EXT: Record<string, string> = {
   swift: 'swift', yaml: 'yaml', markdown: 'md',
 }
 
-function CodePage({ content, language, title }: { content: string; language?: string; title: string }) {
+function CodePage({ content, language, title, filePath }: { content: string; language?: string; title: string; filePath?: string }) {
   const [copied, setCopied] = useState(false)
   const [saved, setSaved]   = useState(false)
-  function copy() { navigator.clipboard.writeText(content); setCopied(true); setTimeout(() => setCopied(false), 1500) }
+  const ed = useFileEditor(content, filePath)
   const ext = language ? (LANG_EXT[language.toLowerCase()] ?? language) : 'txt'
+  function copy() { navigator.clipboard.writeText(ed.currentContent); setCopied(true); setTimeout(() => setCopied(false), 1500) }
   async function saveToWorkspace() {
     const filename = `${title}.${ext}`
     const fd = new FormData()
-    fd.append('file', new Blob([content], { type: 'text/plain' }), filename)
+    fd.append('file', new Blob([ed.currentContent], { type: 'text/plain' }), filename)
     await fetch(`${API}/workspace/upload`, { method: 'POST', body: fd })
     setSaved(true); setTimeout(() => setSaved(false), 2000)
   }
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
       <ActionBar>
-        {language && <span style={{ fontSize: 11, color: '#a3a3a3', fontFamily: 'var(--mono)', textTransform: 'uppercase', marginRight: 4 }}>{language}</span>}
-        <ActionBtn onClick={copy}>{copied ? 'Copied!' : 'Copy'}</ActionBtn>
-        <ActionBtn onClick={() => download(`${title}.${ext}`, content)}>Download .{ext}</ActionBtn>
-        <ActionBtn onClick={saveToWorkspace}>{saved ? 'Saved!' : 'Save to workspace'}</ActionBtn>
+        {!ed.editing && language && <span style={{ fontSize: 11, color: '#a3a3a3', fontFamily: 'var(--mono)', textTransform: 'uppercase', marginRight: 4 }}>{language}</span>}
+        {ed.editing ? (
+          <>
+            <ActionBtn onClick={ed.cancelEdit}>Cancel</ActionBtn>
+            <button onClick={ed.saveEdit} disabled={ed.saving} style={{ fontSize: 12, padding: '4px 12px', background: '#171717', color: '#fff', border: 'none', borderRadius: 6, cursor: 'pointer', fontFamily: 'inherit' }}>
+              {ed.saving ? 'Saving…' : 'Update'}
+            </button>
+          </>
+        ) : (
+          <>
+            <ActionBtn onClick={copy}>{copied ? 'Copied!' : 'Copy'}</ActionBtn>
+            <ActionBtn onClick={() => download(`${title}.${ext}`, ed.currentContent)}>Download .{ext}</ActionBtn>
+            {filePath
+              ? <ActionBtn onClick={ed.startEdit}>Edit</ActionBtn>
+              : <ActionBtn onClick={saveToWorkspace}>{saved ? 'Saved!' : 'Save to workspace'}</ActionBtn>
+            }
+          </>
+        )}
       </ActionBar>
-      <div style={{ flex: 1, overflow: 'auto', padding: '16px 24px' }}>
-        <pre style={{ margin: 0, padding: '16px 20px', background: '#0d0d0d', borderRadius: 10, color: '#e5e5e5', fontSize: 13, fontFamily: 'var(--mono)', lineHeight: 1.65, whiteSpace: 'pre-wrap', wordBreak: 'break-all' }}>
-          {content}
-        </pre>
-      </div>
+      {ed.editing ? (
+        <textarea
+          value={ed.draft}
+          onChange={e => ed.setDraft(e.target.value)}
+          style={{ flex: 1, padding: '24px 32px', fontFamily: 'var(--mono)', fontSize: 13, lineHeight: 1.7, border: 'none', outline: 'none', resize: 'none', background: '#0d0d0d', color: '#e5e5e5' }}
+        />
+      ) : (
+        <div style={{ flex: 1, overflow: 'auto', padding: '16px 24px' }}>
+          <pre style={{ margin: 0, padding: '16px 20px', background: '#0d0d0d', borderRadius: 10, color: '#e5e5e5', fontSize: 13, fontFamily: 'var(--mono)', lineHeight: 1.65, whiteSpace: 'pre-wrap', wordBreak: 'break-all' }}>
+            {ed.currentContent}
+          </pre>
+        </div>
+      )}
     </div>
   )
 }
@@ -380,10 +448,10 @@ function FilesPage({ initialPath, onOpenPage, onPathChange }: { initialPath?: st
       onOpenPage({ id: `file:${item.path}`, title: item.name, type: 'image', filePath: item.path })
     } else if (ext === 'md') {
       fetch(`${API}/workspace/file?path=${encodeURIComponent(item.path)}`)
-        .then(r => r.json()).then(d => onOpenPage({ id: `file:${item.path}`, title: item.name, type: 'markdown', content: d.content }))
+        .then(r => r.json()).then(d => onOpenPage({ id: `file:${item.path}`, title: item.name, type: 'markdown', content: d.content, filePath: item.path }))
     } else {
       fetch(`${API}/workspace/file?path=${encodeURIComponent(item.path)}`)
-        .then(r => r.json()).then(d => onOpenPage({ id: `file:${item.path}`, title: item.name, type: 'code', content: d.content, language: ext }))
+        .then(r => r.json()).then(d => onOpenPage({ id: `file:${item.path}`, title: item.name, type: 'code', content: d.content, language: ext, filePath: item.path }))
     }
   }
 
@@ -1499,8 +1567,8 @@ export default function Canvas({ pages, activeId, minimized, onMinimize, onResto
 
       {/* Body */}
       <div style={{ flex: 1, overflow: (activePage.type === 'settings' || activePage.type === 'files') ? 'hidden' : 'auto' }}>
-        {activePage.type === 'markdown' && <MarkdownPage content={activePage.content ?? ''} title={activePage.title} />}
-        {activePage.type === 'code'     && <CodePage content={activePage.content ?? ''} language={activePage.language} title={activePage.title} />}
+        {activePage.type === 'markdown' && <MarkdownPage content={activePage.content ?? ''} title={activePage.title} filePath={activePage.filePath} />}
+        {activePage.type === 'code'     && <CodePage content={activePage.content ?? ''} language={activePage.language} title={activePage.title} filePath={activePage.filePath} />}
         {activePage.type === 'browser'  && <BrowserPage initialUrl={activePage.url ?? ''} />}
         {activePage.type === 'table'    && <TablePage data={activePage.data ?? '[]'} title={activePage.title} />}
         {activePage.type === 'chart'    && <ChartPage data={activePage.data ?? '[]'} chart_type={activePage.chart_type} title={activePage.title} />}

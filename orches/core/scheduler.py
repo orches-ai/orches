@@ -59,6 +59,7 @@ async def _tick():
 
 
 async def _run_task(task_id: str, agent_id: str, user_input: str, schedule: str | None, repeat: bool):
+    from core import engine
     from core.database import SessionLocal, TaskModel
     try:
         result = await engine.run_agent(agent_id, user_input)
