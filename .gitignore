@@ -30,8 +30,15 @@ orches/alembic/
 orches/alembic.ini
 orches/workspace/*
 !orches/workspace/.gitkeep
+!orches/workspace/welcome.md
 orches/registry/agents/*.agent
 !orches/registry/agents/main.agent
+!orches/registry/agents/researcher.agent
+!orches/registry/agents/writer.agent
+!orches/registry/agents/content_lead.agent
+!orches/registry/agents/content_researcher.agent
+!orches/registry/agents/content_writer.agent
+!orches/registry/agents/image_finder.agent
 
 # Node
 node_modules/

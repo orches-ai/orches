@@ -41,12 +41,14 @@ class MCPServer:
         """Launch subprocess, initialize, and list tools. Returns True on success."""
         try:
             parts = shlex.split(self.command)
+            limit = 10 * 1024 * 1024  # 10 MB — MCP servers can return large payloads
             self._process = await asyncio.create_subprocess_exec(
                 *parts,
                 stdin=asyncio.subprocess.PIPE,
                 stdout=asyncio.subprocess.PIPE,
                 stderr=asyncio.subprocess.DEVNULL,
                 env=self._build_env(),
+                limit=limit,
             )
         except Exception as e:
             logger.warning("MCP '%s' failed to start: %s", self.name, e)

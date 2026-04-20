@@ -50,12 +50,13 @@ function toYaml(cfg: Agent): string {
 }
 
 function ToggleGroup({
-  label, items, selected, onToggle, color = '#0ea5e9',
+  label, items, selected, onToggle, onToggleMany, color = '#0ea5e9',
 }: {
   label: string
   items: { value: string; hint?: string }[]
   selected: string[]
   onToggle: (v: string) => void
+  onToggleMany?: (add: string[], remove: string[]) => void
   color?: string
 }) {
   if (items.length === 0)
@@ -65,11 +66,36 @@ function ToggleGroup({
         <div style={s.empty}>none available</div>
       </>
     )
+
+  // Split into builtin tools and MCP groups (name contains '__')
+  const builtin = items.filter(t => !t.value.includes('__'))
+  const mcpGroups: Record<string, string[]> = {}
+  items.filter(t => t.value.includes('__')).forEach(t => {
+    const server = t.value.split('__')[0]
+    if (!mcpGroups[server]) mcpGroups[server] = []
+    mcpGroups[server].push(t.value)
+  })
+
+  function isMcpActive(server: string) {
+    return mcpGroups[server].every(t => selected.includes(t))
+  }
+  function isMcpPartial(server: string) {
+    return !isMcpActive(server) && mcpGroups[server].some(t => selected.includes(t))
+  }
+  function toggleMcp(server: string) {
+    if (isMcpActive(server)) {
+      onToggleMany ? onToggleMany([], mcpGroups[server]) : mcpGroups[server].forEach(t => onToggle(t))
+    } else {
+      const toAdd = mcpGroups[server].filter(t => !selected.includes(t))
+      onToggleMany ? onToggleMany(toAdd, []) : toAdd.forEach(t => onToggle(t))
+    }
+  }
+
   return (
     <>
       <div style={s.label}>{label}</div>
       <div style={s.chips}>
-        {items.map(item => {
+        {builtin.map(item => {
           const active = selected.includes(item.value)
           return (
             <button
@@ -84,6 +110,33 @@ function ToggleGroup({
               }}
             >
               {item.value}
+            </button>
+          )
+        })}
+        {Object.keys(mcpGroups).map(server => {
+          const active  = isMcpActive(server)
+          const partial = isMcpPartial(server)
+          const c = active || partial ? color : '#a3a3a3'
+          return (
+            <button
+              key={server}
+              title={`${server} MCP — ${mcpGroups[server].length} tools`}
+              onClick={() => toggleMcp(server)}
+              style={{
+                ...s.chip,
+                borderColor: active ? color : partial ? color : '#e5e5e5',
+                color: c,
+                background: active ? `${color}18` : partial ? `${color}0d` : 'transparent',
+                gap: 5,
+              }}
+            >
+              <span style={{
+                display: 'inline-block', width: 6, height: 6, borderRadius: '50%',
+                background: active ? color : partial ? color : '#d4d4d4',
+                flexShrink: 0,
+              }} />
+              {server}
+              <span style={{ fontSize: 10, opacity: 0.6 }}>{mcpGroups[server].length}</span>
             </button>
           )
         })}
@@ -203,7 +256,7 @@ export default function AgentSettings({ agent, agents, onClose, onSave, onDelete
     const config = buildConfig()
     try {
       const method = isNew ? 'POST' : 'PUT'
-      const url    = isNew ? `${API}/agents/` : `${API}/agents/${id}/`
+      const url    = isNew ? `${API}/agents/` : `${API}/agents/${id}`
       const res = await fetch(url, {
         method,
         headers: { 'Content-Type': 'application/json' },
@@ -350,6 +403,12 @@ export default function AgentSettings({ agent, agents, onClose, onSave, onDelete
               items={availableTools.map(t => ({ value: t.name, hint: t.description }))}
               selected={tools}
               onToggle={v => setTools(toggle(tools, v))}
+              onToggleMany={(add, remove) => setTools(prev => {
+                const s = new Set(prev)
+                remove.forEach(t => s.delete(t))
+                add.forEach(t => s.add(t))
+                return Array.from(s)
+              })}
               color="#0ea5e9"
             />
 

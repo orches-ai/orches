@@ -938,7 +938,7 @@ function EnvironmentSection() {
 
 interface MCPServer { name: string; command: string; tools_count: number; status: string; tools: string[] }
 
-function MCPSection() {
+function MCPSection({ onOpenGuide }: { onOpenGuide?: () => void }) {
   const [servers, setServers] = useState<MCPServer[]>([])
   const [showModal, setShowModal] = useState(false)
   const [showHelp, setShowHelp]   = useState(false)
@@ -1032,7 +1032,14 @@ function MCPSection() {
                 style={{ ...ss.input, resize: 'vertical', fontFamily: 'var(--mono)', fontSize: 12 }}
                 placeholder={'{ "GITHUB_TOKEN": "${GITHUB_TOKEN}" }'} />
             </div>
-            {error && <div style={{ color: '#ef4444', fontSize: 12 }}>{error}</div>}
+            {error && (
+              <div style={{ fontSize: 12 }}>
+                <span style={{ color: '#ef4444' }}>{error}</span>
+                {onOpenGuide && (
+                  <span style={{ color: '#a3a3a3' }}> — <button onClick={() => { closeModal(); onOpenGuide() }} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#0ea5e9', fontSize: 12, padding: 0, textDecoration: 'underline' }}>install manually</button></span>
+                )}
+              </div>
+            )}
             <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
               <button onClick={closeModal} style={ss.ghost}>Cancel</button>
               <button onClick={handleAdd} disabled={adding} style={ss.btn}>{adding ? 'Starting…' : 'Add Server'}</button>
@@ -1285,6 +1292,72 @@ Canvas is the built-in viewer for agent output.
 - *Timeout* — maximum execution time per request in seconds.
 
 **MCP Servers** — connect external services via the Model Context Protocol. Each server adds new tools to all agents.
+
+---
+
+## Installing MCP Servers
+
+MCP servers run as local processes. If a server fails to start from the UI, install it manually first.
+
+### Node.js (npx)
+
+Most MCP servers are npm packages. Install globally so they're always available:
+
+\`\`\`bash
+npm install -g @notionhq/notion-mcp-server
+npm install -g @modelcontextprotocol/server-github
+npm install -g @modelcontextprotocol/server-filesystem
+\`\`\`
+
+Then in **Settings → MCP Servers**, use the installed binary as the command:
+
+\`\`\`
+notion-mcp-server
+\`\`\`
+
+Or continue using \`npx -y <package>\` — npx downloads and runs the package directly without global install.
+
+### Python (uv or pip)
+
+Python MCP servers use \`uv\` (recommended) or \`pip\`:
+
+\`\`\`bash
+# With uv (faster, isolated)
+uv tool install mcp-server-fetch
+
+# With pip
+pip install mcp-server-fetch
+\`\`\`
+
+Then use the module as the command:
+
+\`\`\`
+python -m mcp_server_fetch
+\`\`\`
+
+Or with uv:
+
+\`\`\`
+uvx mcp-server-fetch
+\`\`\`
+
+### ENV Variables
+
+Pass secrets and config in the **ENV Variables** field as JSON:
+
+\`\`\`json
+{
+  "GITHUB_TOKEN": "ghp_your_token",
+  "NOTION_API_KEY": "secret_your_key"
+}
+\`\`\`
+
+### Troubleshooting
+
+If the server fails to start, check the terminal where orches is running for error details. Common fixes:
+- Make sure \`node\` / \`python\` / \`npx\` is in your PATH
+- Install the package globally before adding it via UI
+- Verify the token or API key in ENV Variables is correct
 `
 
 function GuideSection() {
@@ -1366,7 +1439,7 @@ function SettingsPage() {
         {section === 'api-keys'    && <ApiKeysSection />}
         {section === 'models'      && <ModelsSection />}
         {section === 'environment' && <EnvironmentSection />}
-        {section === 'mcp'         && <MCPSection />}
+        {section === 'mcp'         && <MCPSection onOpenGuide={() => setSection('guide')} />}
         {section === 'guide'       && <GuideSection />}
       </div>
     </div>
