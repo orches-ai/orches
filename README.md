@@ -38,7 +38,7 @@ Orches lets you create and manage AI agents that work together. Each agent has a
 Requires [Docker](https://docs.docker.com/get-docker/) and Docker Compose.
 
 ```bash
-git clone https://github.com/orches-ai/orches.git
+git clone https://github.com/ysz7/orches.git
 cd orches
 docker compose up --build
 ```
@@ -54,7 +54,7 @@ Add your API key in **Settings → API Keys** and you're ready.
 Requires Python 3.11+ and Node.js 18+.
 
 ```bash
-git clone https://github.com/orches-ai/orches.git
+git clone https://github.com/ysz7/orches.git
 cd orches
 ./start.sh
 ```
